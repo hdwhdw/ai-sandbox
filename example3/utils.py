@@ -1,6 +1,17 @@
 def is_number(value):
-    """Check if a value is a number (int or float)."""
-    return isinstance(value, (int, float))
+    """Check if a value is a number (int, float) or can be converted to one."""
+    if isinstance(value, (int, float)):
+        return True
+    
+    # Try to convert string to number
+    if isinstance(value, str):
+        try:
+            float(value)
+            return True
+        except ValueError:
+            pass
+    
+    return False
 
 def validate_inputs(a, b, operation=None):
     """Validate that inputs are numbers and operation is supported.
