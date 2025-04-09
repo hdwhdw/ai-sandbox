@@ -1,9 +1,9 @@
-from math_utils import add, subtract
+from math_utils import round_num
 
-def main():
-    x, y = 10, 5
-    print(f"{x} + {y} = {add(x, y)}")
-    print(f"{x} - {y} = {subtract(x, y)}")
+def report_values(vals):
+    for v in vals:
+        # uses our explicit round_num
+        print(f"{v} → {round_num(v, 0)}")
 
 if __name__ == "__main__":
-    main()
+    report_values([1.5, 2.5, 3.5])
