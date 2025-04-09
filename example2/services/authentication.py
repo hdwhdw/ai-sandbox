@@ -6,8 +6,15 @@ class AuthenticationService:
     Service to handle user authentication.
     """
     
-    def __init__(self):
+    def __init__(self, session_timeout=3600):
+        """
+        Initialize authentication service.
+        
+        Args:
+            session_timeout (int): Time in seconds before a session expires (default: 1 hour)
+        """
         self.active_sessions = {}  # user_id -> last_activity_timestamp
+        self.session_timeout = session_timeout
     
     def authenticate(self, user, password):
         """
@@ -41,7 +48,21 @@ class AuthenticationService:
         Returns:
             bool: True if user is authenticated, False otherwise
         """
-        return user_id in self.active_sessions
+        if user_id not in self.active_sessions:
+            return False
+            
+        # Check if session has timed out
+        last_activity = self.active_sessions[user_id]
+        current_time = time.time()
+        
+        if current_time - last_activity > self.session_timeout:
+            # Session expired, remove it
+            del self.active_sessions[user_id]
+            return False
+            
+        # Update last activity time
+        self.active_sessions[user_id] = current_time
+        return True
     
     def logout(self, user_id):
         """
@@ -52,3 +73,12 @@ class AuthenticationService:
         """
         if user_id in self.active_sessions:
             del self.active_sessions[user_id]
+    
+    def update_session_timeout(self, timeout):
+        """
+        Update the session timeout value.
+        
+        Args:
+            timeout (int): New timeout value in seconds
+        """
+        self.session_timeout = timeout
