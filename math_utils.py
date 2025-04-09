@@ -18,3 +18,5 @@ def round_num(x, ndigits=0):
     d = decimal.Decimal(x)
     quant = decimal.Decimal(10) ** -ndigits
     return float(ctx.quantize(d, quant))
+
+round = round_num
